@@ -8,10 +8,15 @@ const main = async () => {
   //call create NFT function
   let txn = await nftContract.makeAnEpicNFT()
   await txn.wait()
+  console.log("Minted NFT #1")
 
   //create another for funzies
   txn = await nftContract.makeAnEpicNFT()
   await txn.wait();
+  console.log("Minted NFT #2")
+
+  const currentMint = await nftContract.getTotalNFTsMintedSoFar()
+  console.log("Current Mint Amount is: ", currentMint.toNumber());
 };
 
 const runMain = async () => {

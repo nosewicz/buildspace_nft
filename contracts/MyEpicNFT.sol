@@ -12,6 +12,7 @@ contract MyEpicNFT is ERC721URIStorage {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
+
   //for svg code. base svg variable all NFTs can use
   string baseSvg = "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: white; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='black' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>";
 
@@ -19,6 +20,8 @@ contract MyEpicNFT is ERC721URIStorage {
   string[] firstWords = ["Hot", "Sexy", "Incredible", "Attractive", "Pleasing", "Pleasurable"];
   string[] secondWords = ["Female", "Woman", "Male", "Man", "Trans", "Trap"];
   string[] thirdWords = ["Boobs", "Lips", "Dongers", "Butt", "Secretions", "Pussy"];
+
+  event NewEpicNFTMinted(address sender, uint256 tokenId);
   
   //name and symbol of NFTs
   constructor() ERC721 ("Not Appropriate Phrases", "CRINGE") {
@@ -54,6 +57,8 @@ contract MyEpicNFT is ERC721URIStorage {
   function makeAnEpicNFT() public {
     //get current tokenId
     uint256 newItemId = _tokenIds.current();
+    //require tokenID to be less than 50 (our max mint number)
+    require(newItemId < 50);
 
     //randomly get one word from each array
     string memory first = pickRandomFirstWord(newItemId);
@@ -102,5 +107,12 @@ contract MyEpicNFT is ERC721URIStorage {
 
     //increment the counter for next token minted
     _tokenIds.increment();
+
+    //emit event
+    emit NewEpicNFTMinted(msg.sender, newItemId);
+  }
+
+  function getTotalNFTsMintedSoFar() public view returns (uint256) {
+    return _tokenIds.current();
   }
 }
